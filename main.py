@@ -53,7 +53,7 @@ def webhook():
 # Функція від chatgpt
 def ask_openrouter(prompt):
     response = client.chat.completions.create(
-        model="openrouter/gpt-4o-mini",
+        model="openrouter/gpt-4o"
         messages=[
             {"role": "user", "content": prompt}
         ]
