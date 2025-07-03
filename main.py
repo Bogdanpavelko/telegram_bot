@@ -5,8 +5,8 @@ from flask import Flask, request
 import requests
 from datetime import datetime
 
-# =============== Налаштування ===============
-BOT_TOKEN = os.getenv("BOT_TOKEN") or "сюди_встав_свій_токен"
+# =============== пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ===============
+BOT_TOKEN = os.getenv("7619011766:AAGAhF_uW5efso8pLfiPAkLEdHV8IL-VKJo")
 BOT_NAME = os.getenv("BOT_NAME") or "DemoBot"
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
@@ -25,16 +25,16 @@ def webhook():
     text = message["text"].lower()
     chat_id = message["chat"]["id"]
 
-    # =============== Обробка повідомлення ===============
-    if "час" in text or "годин" in text:
+    # =============== пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ===============
+    if "пїЅпїЅпїЅ" in text or "пїЅпїЅпїЅпїЅпїЅ" in text:
         now = datetime.now().strftime("%H:%M:%S")
-        reply = f"Зараз {now}"
-    elif "тебе звати" in text or "ім'я" in text:
-        reply = f"Мене звати {BOT_NAME}"
+        reply = f"пїЅпїЅпїЅпїЅпїЅ {now}"
+    elif "пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ" in text or "пїЅпїЅ'пїЅ" in text:
+        reply = f"пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ {BOT_NAME}"
     else:
-        reply = f"Ти написав: {message['text']}"
+        reply = f"пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: {message['text']}"
 
-    # =============== Відповідь у Telegram ===============
+    # =============== ВіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Telegram ===============
     data = {
         "chat_id": chat_id,
         "text": reply
@@ -45,8 +45,8 @@ def webhook():
 
 @app.route("/", methods=["GET"])
 def hello():
-    return "Бот працює!"
+    return "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!"
 
-# =============== Головне ====================
+# =============== пїЅпїЅпїЅпїЅпїЅпїЅпїЅ ====================
 if __name__ == "__main__":
     app.run(debug=True)
