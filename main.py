@@ -68,6 +68,18 @@ def ask_openrouter(prompt):
 def hello():
     return "Не знаю!"
 
+
+
+#chatgpt всі можливі версії
+@app.route("/models", methods=["GET"])
+def get_models():
+    try:
+        models_list = client.models.list()
+        models_info = [{"id": m.id, "object": m.object} for m in models_list.data]
+        return {"models": models_info}
+    except Exception as e:
+        return {"error": str(e)}
+#chatgpt
 # =============== ������� ====================
 if __name__ == "__main__":
     app.run(debug=True)
