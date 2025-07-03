@@ -53,7 +53,7 @@ def webhook():
 # Функція від chatgpt
 def ask_openrouter(prompt):
     response = client.chat.completions.create(
-        model="openrouter/gpt-4o"
+        model="openrouter/gpt-4o",
         messages=[
             {"role": "user", "content": prompt}
         ]
@@ -61,7 +61,7 @@ def ask_openrouter(prompt):
     return response.choices[0].message.content
 
 
-# Функція від chatgpt
+# Функція від chatgpt//////
 
 
 @app.route("/", methods=["GET"])
@@ -71,14 +71,14 @@ def hello():
 
 
 #chatgpt всі можливі версії
-@app.route("/models", methods=["GET"])
-def get_models():
-    try:
-        models_list = client.models.list()
-        models_info = [{"id": m.id, "object": m.object} for m in models_list.data]
-        return {"models": models_info}
-    except Exception as e:
-        return {"error": str(e)}
+# @app.route("/models", methods=["GET"])
+# def get_models():
+#     try:
+#         models_list = client.models.list()
+#         models_info = [{"id": m.id, "object": m.object} for m in models_list.data]
+#         return {"models": models_info}
+#     except Exception as e:
+#         return {"error": str(e)}
 #chatgpt
 # =============== ������� ====================
 if __name__ == "__main__":
