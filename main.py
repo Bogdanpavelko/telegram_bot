@@ -26,7 +26,9 @@ def webhook():
     chat_id = message["chat"]["id"]
 
     # =============== ������� ����������� ===============
-    if "час" in text or "годин" in text:
+    if 'ai' in text:
+        reply = ask_openrouter(text)
+    elif "час" in text or "годин" in text:
         now = datetime.now().strftime("%H:%M:%S")
         reply = f"зараз {now}"
     elif "тебе звати" in text or "ім'я" in text:
@@ -42,6 +44,27 @@ def webhook():
     requests.post(TELEGRAM_API_URL, json=data)
 
     return {"ok": True}
+
+
+# Функція від chatgpt
+def ask_openrouter(prompt):
+    import openai
+    api_key = os.getenv("OPENROUTER_API_KEY")
+
+    openai.api_key = api_key
+    openai.api_base = "https://openrouter.ai/api/v1"  # URL для OpenRouter
+
+    response = openai.ChatCompletion.create(
+        model="openrouter/openchat",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    return response['choices'][0]['message']['content']
+
+# Функція від chatgpt
+
 
 @app.route("/", methods=["GET"])
 def hello():
