@@ -6,7 +6,7 @@ import requests
 from datetime import datetime
 
 # =============== ������������ ===============
-BOT_TOKEN = os.getenv("7619011766:AAGAhF_uW5efso8pLfiPAkLEdHV8IL-VKJo")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 BOT_NAME = os.getenv("BOT_NAME") or "DemoBot"
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
@@ -26,13 +26,13 @@ def webhook():
     chat_id = message["chat"]["id"]
 
     # =============== ������� ����������� ===============
-    if "���" in text or "�����" in text:
+    if "час" in text or "годин" in text:
         now = datetime.now().strftime("%H:%M:%S")
-        reply = f"����� {now}"
-    elif "���� �����" in text or "��'�" in text:
-        reply = f"���� ����� {BOT_NAME}"
+        reply = f"зараз {now}"
+    elif "тебе звати" in text or "ім'я" in text:
+        reply = f"Мене звати {BOT_NAME}"
     else:
-        reply = f"�� �������: {message['text']}"
+        reply = f"Ти написав: {message['text']}"
 
     # =============== ³������ � Telegram ===============
     data = {
@@ -45,7 +45,7 @@ def webhook():
 
 @app.route("/", methods=["GET"])
 def hello():
-    return "��� ������!"
+    return "Не знаю!"
 
 # =============== ������� ====================
 if __name__ == "__main__":
