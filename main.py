@@ -3,6 +3,7 @@ import logging
 import os
 from flask import Flask, request
 import requests
+from openai import OpenAI#chatgpt
 from datetime import datetime
 
 # =============== ������������ ===============
@@ -12,6 +13,8 @@ TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 # =============== Flask app ===============
 app = Flask(__name__)
+client = OpenAI(api_key=os.getenv("OPENROUTER_API_KEY"), api_base="https://openrouter.ai/api/v1")#chatgpt
+
 logging.basicConfig(level=logging.INFO)
 
 @app.route("/", methods=["POST"])
@@ -48,20 +51,14 @@ def webhook():
 
 # Функція від chatgpt
 def ask_openrouter(prompt):
-    import openai
-    api_key = os.getenv("OPENROUTER_API_KEY")
-
-    openai.api_key = api_key
-    openai.api_base = "https://openrouter.ai/api/v1"  # URL для OpenRouter
-
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="openrouter/openchat",
         messages=[
             {"role": "user", "content": prompt}
         ]
     )
+    return response.choices[0].message.content
 
-    return response['choices'][0]['message']['content']
 
 # Функція від chatgpt
 
