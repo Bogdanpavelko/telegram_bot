@@ -75,8 +75,8 @@ def ask_openrouter(prompt):
     }
 
     prompt_ukr  = [
-    {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
-    {"role": "user", "content": prompt}
+        {"role": "system", "content": "Відповідай українською мовою коротко і чітко."},
+        {"role": "user", "content": "Яка столиця України?"}
 ]
 
     # data = {     Робочий 
