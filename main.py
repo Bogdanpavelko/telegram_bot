@@ -14,22 +14,29 @@ TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 # =============== Flask app ===============
 app = Flask(__name__)
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+# logging.basicConfig(level=logging.INFO)
 
 @app.route("/", methods=["POST"])
 def webhook():
     update = request.get_json()
 
+    #chatgpt запит у нейронку
+    logging.info("=== ОТРИМАНО UPDATE ===")
+    logging.info(json.dumps(update, indent=2, ensure_ascii=False))
+
+
     if "message" not in update or "text" not in update["message"]:
         return {"ok": True}
 
     message = update["message"]
+    raw_text = message["text"]
     text = message["text"].lower()
     chat_id = message["chat"]["id"]
 
     # =============== Логіка відповіді бота  ===============
     if 'ai' in text:
-        reply = ask_openrouter(text)
+        reply = ask_openrouter(raw_text)
     elif "час" in text or "годин" in text:
         now = datetime.now().strftime("%H:%M:%S")
         reply = f"зараз {now}"
@@ -45,6 +52,9 @@ def webhook():
     }
     requests.post(TELEGRAM_API_URL, json=data)
 
+    #від нейронки
+    logging.info(f"Відправлено в Telegram: {reply}")
+
     return {"ok": True}
 
 
@@ -55,29 +65,58 @@ def ask_openrouter(prompt):
     headers = {
         "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://telegram-bot-m9mk.onrender.com",  # опційно
-        "X-Title": "TelegramBot",  # опційно
+        "HTTP-Referer": "https://telegram-bot-m9mk.onrender.com",
+        "X-Title": "TelegramBot",
     }
 
-        # Промт щоб нейронка відповідала Українською
     prompt_ukr = f"Відповідай українською мовою на наступне запитання користувача: {prompt}"
 
     data = {
-        "model": "deepseek/deepseek-v3-base:free",  # безкоштовна модель deepseek
+        "model": "deepseek/deepseek-v3-base:free",
         "messages": [
             {"role": "user", "content": prompt_ukr}
         ]
     }
 
-    response = requests.post(url, headers=headers, json=data)
-
-    # response = requests.post(url, headers=headers, data=json.dumps(data))
-
-    if response.status_code == 200:
+    try:
+        response = requests.post(url, headers=headers, json=data, timeout=10)  # <--- таймаут
+        response.raise_for_status()
         return response.json()['choices'][0]['message']['content']
-    else:
-        print("OpenRouter error:", response.status_code, response.text)
-        return "⚠️ Помилка при зверненні до OpenRouter"
+    except requests.exceptions.Timeout:
+        return "⚠️ Вийшов час очікування відповіді від OpenRouter"
+    except requests.exceptions.RequestException as e:
+        print("OpenRouter error:", e)
+        return "⚠️ Сталася помилка при зверненні до OpenRouter"
+
+
+# def ask_openrouter(prompt):   РОБОЧА!!!!!
+#     url = "https://openrouter.ai/api/v1/chat/completions"
+#     headers = {
+#         "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+#         "Content-Type": "application/json",
+#         "HTTP-Referer": "https://telegram-bot-m9mk.onrender.com",  # опційно
+#         "X-Title": "TelegramBot",  # опційно
+#     }
+
+#         # Промт щоб нейронка відповідала Українською
+#     prompt_ukr = f"Відповідай українською мовою на наступне запитання користувача: {prompt}"
+
+#     data = {
+#         "model": "deepseek/deepseek-v3-base:free",  # безкоштовна модель deepseek
+#         "messages": [
+#             {"role": "user", "content": prompt_ukr}
+#         ]
+#     }
+
+#     response = requests.post(url, headers=headers, json=data)
+
+#     # response = requests.post(url, headers=headers, data=json.dumps(data))
+
+#     if response.status_code == 200:
+#         return response.json()['choices'][0]['message']['content']
+#     else:
+#         print("OpenRouter error:", response.status_code, response.text)
+#         return "⚠️ Помилка при зверненні до OpenRouter"
 
 # Функція від chatgpt//////
 
@@ -86,18 +125,6 @@ def ask_openrouter(prompt):
 def hello():
     return "Не знаю!"
 
-
-
-#chatgpt всі можливі версії
-# @app.route("/models", methods=["GET"])
-# def get_models():
-#     try:
-#         models_list = client.models.list()
-#         models_info = [{"id": m.id, "object": m.object} for m in models_list.data]
-#         return {"models": models_info}
-#     except Exception as e:
-#         return {"error": str(e)}
-#chatgpt
 # =============== __main__ ====================
 if __name__ == "__main__":
     app.run(debug=True)
