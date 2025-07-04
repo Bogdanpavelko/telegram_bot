@@ -71,15 +71,10 @@ def ask_openrouter(prompt):
         "X-Title": "TelegramBot",
     }
 
-    prompt_ukr  = [
-        {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
-        {"role": "user", "content": prompt}
-    ]
-
     data = {  
         "model": "deepseek/deepseek-v3-base:free",
         "messages": [
-            {"role": "user", "content": prompt_ukr}
+            {"role": "user", "content": prompt}
         ]
     }
 
