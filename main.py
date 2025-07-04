@@ -66,7 +66,9 @@ def ask_openrouter(prompt):
         ]
     }
 
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.post(url, headers=headers, json=data)
+
+    # response = requests.post(url, headers=headers, data=json.dumps(data))
 
     if response.status_code == 200:
         return response.json()['choices'][0]['message']['content']
