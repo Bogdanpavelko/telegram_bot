@@ -3,18 +3,16 @@ import logging
 import os
 from flask import Flask, request
 import requests
-from openai import OpenAI  # chatgpt
+import json # chatgpt
 from datetime import datetime
 
-# =============== ������������ ===============
+# =============== Змінні оточення ===============
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 BOT_NAME = os.getenv("BOT_NAME") or "DemoBot"
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 # =============== Flask app ===============
 app = Flask(__name__)
-client = OpenAI(api_key=os.getenv("OPENROUTER_API_KEY"))
-client.base_url = "https://openrouter.ai/api/v1"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,7 +27,7 @@ def webhook():
     text = message["text"].lower()
     chat_id = message["chat"]["id"]
 
-    # =============== ������� ����������� ===============
+    # =============== Логіка відповіді бота  ===============
     if 'ai' in text:
         reply = ask_openrouter(text)
     elif "час" in text or "годин" in text:
@@ -40,7 +38,7 @@ def webhook():
     else:
         reply = f"Ти написав: {message['text']}"
 
-    # =============== ³������ � Telegram ===============
+    # =============== Відправка відповіді в Telegram ===============
     data = {
         "chat_id": chat_id,
         "text": reply
@@ -51,15 +49,30 @@ def webhook():
 
 
 # Функція від chatgpt
+
 def ask_openrouter(prompt):
-    response = client.chat.completions.create(
-        model="openrouter/gpt-3o-mini",
-        messages=[
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://telegram-bot-m9mk.onrender.com",  # опційно
+        "X-Title": "TelegramBot",  # опційно
+    }
+
+    data = {
+        "model": "openai/gpt-4o",  # перевірена модель
+        "messages": [
             {"role": "user", "content": prompt}
         ]
-    )
-    return response.choices[0].message.content
+    }
 
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+
+    if response.status_code == 200:
+        return response.json()['choices'][0]['message']['content']
+    else:
+        print("OpenRouter error:", response.status_code, response.text)
+        return "⚠️ Помилка при зверненні до OpenRouter"
 
 # Функція від chatgpt//////
 
@@ -80,6 +93,6 @@ def hello():
 #     except Exception as e:
 #         return {"error": str(e)}
 #chatgpt
-# =============== ������� ====================
+# =============== __main__ ====================
 if __name__ == "__main__":
     app.run(debug=True)
