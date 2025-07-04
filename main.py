@@ -65,7 +65,7 @@ def webhook():
 def ask_openrouter(prompt):
     url = "https://api.langdock.com/openai/eu/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "Authorization": "Bearer sk-KG78HonDCW_K_cFeFpd9BfuYTQZpJuDvhHt11aOtPPIxGoyTqLOh2YPIYbai85YrER4-ieudDnK_GE9Tb9bjIA",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://telegram-bot-m9mk.onrender.com",
         "X-Title": "TelegramBot",
