@@ -32,15 +32,12 @@ def webhook():
         return {"ok": True}
 
     message = update["message"]
-    raw_text = message["text"]
     text = message["text"].lower()
     chat_id = message["chat"]["id"]
 
     # =============== Логіка відповіді бота  ===============
     if 'ai' in text:
-        # Видаляємо 'ai' зі старту тексту (наприклад, якщо воно є на початку)
-        clean_text = raw_text[3:].strip()  # Відкидає "ai " (з пробілом)
-        reply = ask_openrouter(clean_text)
+        reply = ask_openrouter(text)
 
     elif "час" in text or "годин" in text:
         now = datetime.now().strftime("%H:%M:%S")
@@ -77,23 +74,14 @@ def ask_openrouter(prompt):
     prompt_ukr  = [
         {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
         {"role": "user", "content": prompt}
-]
-
-    # data = {     Робочий 
-    #     "model": "deepseek/deepseek-v3-base:free",
-    #     "messages": [
-    #         {"role": "user", "content": prompt_ukr}
-    #     ]
-    # }
-
-    data = {
-    "model": "deepseek/deepseek-v3-base:free",
-    "temperature": 0.3,
-    "messages": [
-        {"role": "system", "content": "Відповідай українською мовою коротко і чітко."},
-        {"role": "user", "content": prompt}
     ]
-}
+
+    data = {  
+        "model": "deepseek/deepseek-v3-base:free",
+        "messages": [
+            {"role": "user", "content": prompt_ukr}
+        ]
+    }
 
 
     try:
