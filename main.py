@@ -74,8 +74,11 @@ def ask_openrouter(prompt):
     data = {  
         "model": "deepseek/deepseek-v3-base:free",
         "messages": [
-            {"role": "user", "content": prompt}
+        {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
+        {"role": "user", "content": prompt}
         ]
+
+
     }
 
 
