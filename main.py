@@ -11,6 +11,8 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 BOT_NAME = os.getenv("BOT_NAME") or "DemoBot"
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
+
+
 # =============== Flask app ===============
 app = Flask(__name__)
 
@@ -81,7 +83,14 @@ def ask_openrouter(prompt):
     try:
         response = requests.post(url, headers=headers, json=data, timeout=10)  # <--- таймаут
         response.raise_for_status()
-        return response.json()['choices'][0]['message']['content']
+
+        #тимчасово
+        full_response = response.json()
+        content = full_response["choices"][0]["message"]["content"]
+        return content.strip()
+
+
+        #return response.json()['choices'][0]['message']['content']  напів робоча
     except requests.exceptions.Timeout:
         return "⚠️ Вийшов час очікування відповіді від OpenRouter"
     except requests.exceptions.RequestException as e:
