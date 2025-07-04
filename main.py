@@ -73,12 +73,21 @@ def ask_openrouter(prompt):
 
     prompt_ukr = f"Відповідай українською мовою на наступне запитання користувача: {prompt}"
 
+    # data = {     Робочий 
+    #     "model": "deepseek/deepseek-v3-base:free",
+    #     "messages": [
+    #         {"role": "user", "content": prompt_ukr}
+    #     ]
+    # }
+
     data = {
-        "model": "deepseek/deepseek-v3-base:free",
-        "messages": [
-            {"role": "user", "content": prompt_ukr}
-        ]
-    }
+    "model": "deepseek/deepseek-v3-base:free",
+    "messages": [
+        {"role": "system", "content": "Відповідай українською мовою коротко і чітко."},
+        {"role": "user", "content": prompt}
+    ]
+}
+
 
     try:
         response = requests.post(url, headers=headers, json=data, timeout=10)  # <--- таймаут
