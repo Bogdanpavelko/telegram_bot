@@ -38,7 +38,10 @@ def webhook():
 
     # =============== Логіка відповіді бота  ===============
     if 'ai' in text:
-        reply = ask_openrouter(raw_text)
+        # Видаляємо 'ai' зі старту тексту (наприклад, якщо воно є на початку)
+        clean_text = raw_text[3:].strip()  # Відкидає "ai " (з пробілом)
+        reply = ask_openrouter(clean_text)
+
     elif "час" in text or "годин" in text:
         now = datetime.now().strftime("%H:%M:%S")
         reply = f"зараз {now}"
@@ -71,7 +74,10 @@ def ask_openrouter(prompt):
         "X-Title": "TelegramBot",
     }
 
-    prompt_ukr = f"Відповідай українською мовою на наступне запитання користувача: {prompt}"
+    prompt_ukr  = [
+    {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
+    {"role": "user", "content": prompt}
+]
 
     # data = {     Робочий 
     #     "model": "deepseek/deepseek-v3-base:free",
@@ -82,6 +88,7 @@ def ask_openrouter(prompt):
 
     data = {
     "model": "deepseek/deepseek-v3-base:free",
+    "temperature": 0.3,
     "messages": [
         {"role": "system", "content": "Відповідай українською мовою коротко і чітко."},
         {"role": "user", "content": prompt}
