@@ -63,7 +63,7 @@ def webhook():
 # Функція від chatgpt
 
 def ask_openrouter(prompt):
-    url = "https://openrouter.ai/api/v1/chat/completions"
+    url = "https://api.langdock.com/openai/eu/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
         "Content-Type": "application/json",
@@ -72,7 +72,7 @@ def ask_openrouter(prompt):
     }
 
     data = {  
-        "model": "deepseek/deepseek-r1-0528-qwen3-8b:free",
+        "model": "gpt-4o-mini",
         "messages": [
         {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
         {"role": "user", "content": prompt}
