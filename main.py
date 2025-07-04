@@ -60,7 +60,7 @@ def ask_openrouter(prompt):
     }
 
     data = {
-        "model": "openai/gpt-4o",  # перевірена модель
+        "model": "gryphe/mythomax-l2-13b",  # безкоштовна модель
         "messages": [
             {"role": "user", "content": prompt}
         ]
