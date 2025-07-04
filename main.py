@@ -97,7 +97,7 @@ def ask_openrouter(prompt):
 
 
     try:
-        response = requests.post(url, headers=headers, json=data, timeout=10)  # <--- таймаут
+        response = requests.post(url, headers=headers, json=data, timeout=60)  # <--- таймаут
         response.raise_for_status()
 
         #тимчасово
