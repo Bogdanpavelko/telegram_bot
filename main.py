@@ -63,9 +63,9 @@ def webhook():
 # Функція від chatgpt
 
 def ask_openrouter(prompt):
-    url = "https://api.langdock.com/openai/eu/v1/chat/completions"
+    url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": "Bearer sk-KG78HonDCW_K_cFeFpd9BfuYTQZpJuDvhHt11aOtPPIxGoyTqLOh2YPIYbai85YrER4-ieudDnK_GE9Tb9bjIA",
+        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://telegram-bot-m9mk.onrender.com",
         "X-Title": "TelegramBot",
@@ -73,6 +73,7 @@ def ask_openrouter(prompt):
 
     data = {  
         "model": "gpt-4o-mini",
+
         "messages": [
         {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
         {"role": "user", "content": prompt}
