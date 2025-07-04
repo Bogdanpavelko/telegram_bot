@@ -73,9 +73,8 @@ def ask_openrouter(prompt):
 
     data = {  
         "model": "gpt-4o-mini",
-
         "messages": [
-        {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
+        {"role": "system", "content": "Відповідай українською мовою."},
         {"role": "user", "content": prompt}
         ]
 
