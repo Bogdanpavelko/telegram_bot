@@ -60,7 +60,7 @@ def ask_openrouter(prompt):
     }
 
     data = {
-        "model": "gryphe/mythomax-l2-13b",  # безкоштовна модель
+        "model": "deepseek/deepseek-v3-base:free",  # безкоштовна модель deepseek
         "messages": [
             {"role": "user", "content": prompt}
         ]
