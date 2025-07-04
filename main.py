@@ -59,10 +59,13 @@ def ask_openrouter(prompt):
         "X-Title": "TelegramBot",  # опційно
     }
 
+        # Промт щоб нейронка відповідала Українською
+    prompt_ukr = f"Відповідай українською мовою на наступне запитання користувача: {prompt}"
+
     data = {
         "model": "deepseek/deepseek-v3-base:free",  # безкоштовна модель deepseek
         "messages": [
-            {"role": "user", "content": prompt}
+            {"role": "user", "content": prompt_ukr}
         ]
     }
 
