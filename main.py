@@ -72,7 +72,7 @@ def ask_openrouter(prompt):
     }
 
     data = {  
-        "model": "gpt-4o-mini",
+        "model": "deepseek/deepseek-r1-0528-qwen3-8b:free",
         "messages": [
         {"role": "system", "content": "Відповідай українською мовою коротко і зрозуміло."},
         {"role": "user", "content": prompt}
